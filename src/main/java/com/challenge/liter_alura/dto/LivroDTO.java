@@ -28,7 +28,7 @@ public record LivroDTO(
                      autoresFormatados = "Nenhum autor disponível";
               }
 
-              return "\n-----------------------------" +
+              return "\n------------- Livro -------------" +
                       "\nTítulo: " + titulo() +
                       "\nIdiomas: " + String.join(", ", idiomas()) +
                       "\nNúmero de Downloads: " + numeroDownloads() +

@@ -11,11 +11,11 @@ public record AutorDTO(
 
     @Override
     public String toString() {
-        return "\n-----------------------------" +
+        return "\n------------- Autor -------------" +
                 "\nNome: " + nome +
                 "\nAno de Nascimento: " + anoNascimento +
                 "\nAno de Falecimento: " + (anoFalecimento != null ? anoFalecimento : "Atualmente vivo") +
-                "\n-----------------------------";
+                "\n---------------------------------";
     }
 }
 
