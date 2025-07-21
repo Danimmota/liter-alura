@@ -2,9 +2,11 @@ package com.challenge.liter_alura.principal;
 
 import com.challenge.liter_alura.dto.AutorDTO;
 import com.challenge.liter_alura.dto.LivroDTO;
+import com.challenge.liter_alura.exceptions.EntradaInvalidaException;
 import com.challenge.liter_alura.model.Livro;
 import com.challenge.liter_alura.service.LivroService;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -21,6 +23,7 @@ public class Principal {
 
     public void menu(){
         var opcao = -1;
+
         while (opcao!= 0) {
             var menu = """
                 \n========================================
@@ -28,31 +31,44 @@ public class Principal {
                 
                 1- Buscar livro pelo título
                 2- Buscar autor pelo nome
-                3- Listar livros cadastrados
-                4- Listar autores cadastrados //dados de cada autor registrado
-                5- Listar autores vivos em algum ano
-                6- Listar livros em algum idioma
-                7- Listar Top 10 livros cadastrados
+                3- Buscar livro e seu resumo, pelo autor
+                4- Listar livros cadastrados
+                5- Listar autores cadastrados
+                6- Listar autores vivos em algum ano
+                7- Listar livros em algum idioma
+                8- Listar Top 10 livros cadastrados
                 
                 0- Sair
                 =========================================
                 """;
-
             System.out.println(menu);
-            opcao = sc.nextInt();
-            sc.nextLine();
 
-            switch (opcao) {
-                case 1 -> buscarLivroPeloTitulo();
-                case 2 -> buscarAutorPeloNome();
-                case 3 -> listarLivrosCadastrados();
-                case 4 -> listarAutoresCadastrados();
-                case 5 -> listarAutoresVivosAno();
-                case 6 -> listarLivrosEmIdioma();
-                case 7 -> listarTop10Livros();
-                case 0 -> System.out.println("Encerrando a aplicação!");
-                default -> System.out.println("Opção inválida");
-                //ConditionEvaluationReportLogger
+            try{
+                opcao = sc.nextInt();
+                sc.nextLine();
+            } catch (InputMismatchException e) {
+                sc.nextLine();
+                System.out.println("Entrada inválida! Digite o número referente ao que deseja.");
+                continue;
+            }
+
+            try {
+                switch (opcao) {
+                    case 1 -> buscarLivroPeloTitulo();
+                    case 2 -> buscarAutorPeloNome();
+                    case 3 -> buscarLivroPeloAutor();
+                    case 4 -> listarLivrosCadastrados();
+                    case 5 -> listarAutoresCadastrados();
+                    case 6 -> listarAutoresVivosAno();
+                    case 7 -> listarLivrosEmIdioma();
+                    case 8 -> listarTop10Livros();
+                    case 0 -> System.out.println("Encerrando a aplicação!");
+                    default -> System.out.println("Opção inválida");
+                }
+            } catch (EntradaInvalidaException e) {
+                System.out.println(e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Erro inesperado: " + e.getMessage());
             }
         }
     }
@@ -91,6 +107,28 @@ public class Principal {
 
     }
 
+    private void buscarLivroPeloAutor() {
+        System.out.println("\nDigite o nome do autor que deseja: ");
+        String nomeAutor = sc.nextLine();
+        List<LivroDTO> livroPeloAutor = livroService.buscarLivroPeloAutor(nomeAutor);
+        if (livroPeloAutor.isEmpty()){
+            System.out.println("\nNenhum autor encontrado com este nome!");
+            return;
+        }
+        System.out.println("\nAutor: " + nomeAutor + ", livros: \n");
+        livroPeloAutor.forEach(livro -> System.out.println("- " + livro.titulo()));
+
+        System.out.println("\nDigite o título do livro que deseja ver o resumo");
+        String titulo = sc.nextLine();
+
+        try {
+            String resumo = livroService.buscarResumoPorTitulo(titulo);
+            System.out.println("\nResumo do livro: " + resumo);
+        } catch (RuntimeException e) {
+            System.out.println("\nErro ao encontrar o resumo!");
+        }
+    }
+
     private void listarLivrosCadastrados() {
         List<LivroDTO> listaLivros = livroService.listarLivrosCadastrados();
         listaLivros.forEach(System.out::println);
@@ -98,23 +136,7 @@ public class Principal {
 
     private void listarAutoresCadastrados() {
        List<AutorDTO> listaAutores = livroService.listarAutoresCadastrados();
-       listaAutores.forEach(a -> {
-           System.out.println("-----------------------------" +
-                            "\nNome: " + a.nome() +
-                            "\nAno de Nascimento: " + a.anoNascimento() +
-                            "\nAno de Falecimento: " + a.anoFalecimento());
-       });
-    }
-
-    private void buscarLivroPeloAutor() {
-        System.out.println("\nDigite o nome do autor que deseja: ");
-        String nomeAutor = sc.nextLine();
-        List<LivroDTO> livroPeloAutor = livroService.buscarLivroPeloAutor(nomeAutor);
-        if (livroPeloAutor.isEmpty()){
-            System.out.println("\n Nenhum autor encontrado com este nome!");
-        }
-        System.out.println("\n Autor " + nomeAutor + " e respectivos livros cadastrados: " + livroPeloAutor);
-
+       listaAutores.forEach(System.out::println);
     }
 
     private void listarAutoresVivosAno() {
@@ -134,11 +156,12 @@ public class Principal {
         List<LivroDTO> livrosPorIdioma = livroService.listarLivrosEmIdioma(idioma);
 
         if (livrosPorIdioma.isEmpty()) {
-            System.out.println("\nIdioma digitado: " + idioma +
+            System.out.println("\nIdioma escolhido: " + idioma +
                                 "\nNenhum idioma encontrado!");
+        } else {
+            System.out.println("\nIdioma escolhido: " + idioma +
+                                "\nLivros cadastrados neste idioma: " + livrosPorIdioma);
         }
-        System.out.println("\nIdioma digitado: " + idioma +
-                            "\nLivros cadastrados neste idioma: " + livrosPorIdioma);
     }
 
     private void listarTop10Livros() {
@@ -146,11 +169,3 @@ public class Principal {
         top10Livros.forEach(System.out::println);
     }
 }
-
-
-//---------- Autor ----------
-//Nome: Machado de Assis
-//Ano de nascimento: 1839
-//Ano de falecimento: 1908
-//Livros: [Dom Casmurro]
-//----------------------------

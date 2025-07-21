@@ -25,16 +25,13 @@ public class LivroMapper {
         return livro;
     }
 
-//    public List<Livro> toEntityList(List<LivroDTO> dtoList){
-//      return dtoList.stream().map(LivroMapper::toEntity).toList();
-//    }
-
     public static LivroDTO toDto(Livro livro) {
         return new LivroDTO(
                 livro.getTitulo(),
                 livro.getAutores().stream().map(AutorMapper::toDto).toList(),
                 livro.getIdiomas(),
-                livro.getNumeroDownloads()
+                livro.getNumeroDownloads(),
+                null
         );
     }
 

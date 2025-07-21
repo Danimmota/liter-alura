@@ -11,7 +11,8 @@ public record LivroDTO(
         @JsonAlias("title") String titulo,
         @JsonAlias("authors") List<AutorDTO> autores,
         @JsonAlias("languages") List<String> idiomas,
-        @JsonAlias("download_count") Double numeroDownloads
+        @JsonAlias("download_count") Double numeroDownloads,
+        @JsonAlias("summaries") List<String> resumo
        ) {
 
        @Override

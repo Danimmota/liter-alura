@@ -11,8 +11,12 @@ import com.challenge.liter_alura.repository.AutorRepository;
 import com.challenge.liter_alura.repository.LivroRepository;
 import org.springframework.stereotype.Service;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -55,6 +59,40 @@ public class LivroService {
                 .map(AutorMapper::toDto);
     }
 
+    public List<LivroDTO> buscarLivroPeloAutor (String nomeAutor){
+
+        return autorRepository.findByNomeContainingIgnoreCase(nomeAutor)
+                .map(Autor::getLivros)
+                .map(LivroMapper::toDtoList)
+                .orElse(Collections.emptyList());
+    }
+
+    public String buscarResumoPorTitulo(String titulo) {
+        ResponseAPI response = consumoApi.obterDados(titulo);
+
+        String tituloNormalizado = normalize(titulo);
+
+        return response.livros().stream()
+                .filter(livro -> normalize(livro.titulo()).contains(tituloNormalizado))
+                .map(livro -> {
+                    List<String> resumos = livro.resumo();
+                    if (resumos != null && !resumos.isEmpty()) {
+                        return resumos.get(0);
+                    }
+                    return null;
+                })
+                .filter(resumo -> resumo != null && !resumo.isBlank())
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Resumo não encontrado."));
+    }
+
+    private String normalize(String texto) {
+        return Normalizer
+                .normalize(texto, Normalizer.Form.NFD)
+                .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "")
+                .toLowerCase();
+    }
+
     public List<LivroDTO> listarLivrosCadastrados() {
 
         List<Livro> livros = livroRepository.findAllComAutores();
@@ -66,14 +104,6 @@ public class LivroService {
         List<Autor> autores = autorRepository.findAll();
         return AutorMapper.toDtoList(autores);
 
-    }
-
-    public List<LivroDTO> buscarLivroPeloAutor (String nomeAutor){
-
-            return autorRepository.findByNomeContainingIgnoreCase(nomeAutor)
-                    .map(Autor::getLivros)
-                    .map(LivroMapper::toDtoList)
-                    .orElse(Collections.emptyList());
     }
 
     public List<AutorDTO> listarAutoresVivosAno(Integer ano) {
@@ -114,5 +144,4 @@ public class LivroService {
 
         return LivroMapper.toDtoList(livroRepository.findTop10ByOrderByNumeroDownloadsDesc());
     }
-
 }
