@@ -33,8 +33,8 @@ public class Autor {
     public String toString() {
         return "\n------- Autor -------" +
                 "\nNome: '" + nome +
-                "\nDataNascimento: " + anoNascimento +
-                "\nDataFalecimento: " + anoFalecimento +
+                "\nAno de Nascimento: " + anoNascimento +
+                "\nAno de Falecimento: " + anoFalecimento +
                 "\n";
     }
 }

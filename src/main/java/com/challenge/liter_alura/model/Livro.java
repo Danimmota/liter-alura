@@ -21,7 +21,7 @@ public class Livro {
     @Column(unique = true, nullable = false)
     private String titulo;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "livro_autor",
             joinColumns = @JoinColumn(name = "livro_id"),
@@ -41,7 +41,7 @@ public class Livro {
 
         return "---------- Livro ----------" +
                 "\nTítulo: " + titulo +
-                "\nAutor: " + autores +
+                "\nAutores: " + autores +
                 "\nIdioma: " + idiomas +
                 "\nNúmero de downloads: " + numeroDownloads +
                 "\n--------------------------";

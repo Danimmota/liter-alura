@@ -57,14 +57,14 @@ public class LivroService {
 
     public List<LivroDTO> listarLivrosCadastrados() {
 
-        List<Livro> livros = livroRepository.findAll();
-        return LivroMapper.toDtoListLivros(livros);
+        List<Livro> livros = livroRepository.findAllComAutores();
+        return LivroMapper.toDtoList(livros);
+
     }
 
-    //
     public List<AutorDTO> listarAutoresCadastrados() {
         List<Autor> autores = autorRepository.findAll();
-        return AutorMapper.toDtoListAutores(autores);
+        return AutorMapper.toDtoList(autores);
 
     }
 
@@ -72,25 +72,47 @@ public class LivroService {
 
             return autorRepository.findByNomeContainingIgnoreCase(nomeAutor)
                     .map(Autor::getLivros)
-                    .map(LivroMapper::toDtoListLivros)
+                    .map(LivroMapper::toDtoList)
                     .orElse(Collections.emptyList());
     }
 
-    public List<AutorDTO> listarAutoresVivosAno(int ano) {
-        List<Autor> autores = autorRepository.findAutoresVivosNoAno(ano);
+    public List<AutorDTO> listarAutoresVivosAno(Integer ano) {
+        List<Autor> autores = autorRepository.findAutoresVivosEmAno(ano);
         return autores.stream()
                 .map(AutorMapper::toDto)
                 .toList();
     }
 
+    public void menuIdioma() {
+        var menu = """
+                \n========================================
+                Digite a abreviação referente ao idioma desejado:
+                
+                es - espanhol
+                en - inglês
+                fr - francês
+                pt - português
+                
+                =========================================
+                """;
+
+        System.out.println(menu);
+    }
+
     public List<LivroDTO> listarLivrosEmIdioma(String idioma) {
-        List<Livro> livros = livroRepository.findByIdioma(idioma);
-        return LivroMapper.toDtoListLivros(livros);
+        List<Livro> livros = livroRepository.findAll();
+
+        return livros.stream()
+                .filter(livro -> livro.getIdiomas() != null &&
+                        livro.getIdiomas().stream()
+                                .anyMatch(id -> id.equalsIgnoreCase(idioma)))
+                .map(LivroMapper::toDto)
+                .toList();
     }
 
     public List<LivroDTO> listarTop10Livros () {
 
-        return LivroMapper.toDtoListLivros(livroRepository.findTop10ByOrderByNumeroDownloadsDesc());
+        return LivroMapper.toDtoList(livroRepository.findTop10ByOrderByNumeroDownloadsDesc());
     }
 
 }

@@ -9,16 +9,15 @@ import com.challenge.liter_alura.principal.Principal;
 @SpringBootApplication
 public class LiterAluraApplication implements CommandLineRunner {
 
-    public LiterAluraApplication(LivroService livroService) {
-        this.livroService = livroService;
-    }
-
-    public static void main(String[] args) {
+	public static void main(String[] args) {
 		SpringApplication.run(LiterAluraApplication.class, args);
 	}
 
 	private final LivroService livroService;
 
+    public LiterAluraApplication(LivroService livroService) {
+        this.livroService = livroService;
+    }
 
 	@Override
 	public void run(String... args) throws Exception {

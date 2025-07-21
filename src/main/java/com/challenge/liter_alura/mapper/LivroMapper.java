@@ -38,7 +38,7 @@ public class LivroMapper {
         );
     }
 
-    public static List<LivroDTO> toDtoListLivros(List<Livro> livros) {
+    public static List<LivroDTO> toDtoList(List<Livro> livros) {
         return livros.stream()
                 .map(LivroMapper::toDto)
                 .toList();

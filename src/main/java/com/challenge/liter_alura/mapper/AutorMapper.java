@@ -22,7 +22,7 @@ public class AutorMapper {
         return new AutorDTO(autor.getNome(), autor.getAnoNascimento(), autor.getAnoFalecimento());
     }
 
-    public static List<AutorDTO> toDtoListAutores(List<Autor> autors) {
+    public static List<AutorDTO> toDtoList(List<Autor> autors) {
         return autors.stream()
                 .map(AutorMapper::toDto)
                 .toList();

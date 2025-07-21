@@ -13,6 +13,6 @@ import java.util.Optional;
 public interface AutorRepository extends JpaRepository<Autor, Long> {
     Optional<Autor> findByNomeContainingIgnoreCase(String nome);
 
-    @Query("SELECT a FROM Autor a WHERE a.dataNascimento <= :ano AND (a.dataFalecimento IS NULL OR a.dataFalecimento > :ano")
-    List<Autor> findAutoresVivosNoAno(@Param("ano") Integer ano);
+    @Query("SELECT a FROM Autor a WHERE a.anoNascimento <= :ano AND (a.anoFalecimento IS NULL OR a.anoFalecimento >= :ano)")
+    List<Autor> findAutoresVivosEmAno(@Param("ano") Integer ano);
 }
