@@ -115,10 +115,10 @@ public class Principal {
             System.out.println("\nNenhum autor encontrado com este nome!");
             return;
         }
-        System.out.println("\nAutor: " + nomeAutor + ", livros: \n");
+        System.out.println("\nAutor: " + nomeAutor + ", livros: ");
         livroPeloAutor.forEach(livro -> System.out.println("- " + livro.titulo()));
 
-        System.out.println("\nDigite o título do livro que deseja ver o resumo");
+        System.out.println("\nDigite o título do livro que deseja ver o resumo: ");
         String titulo = sc.nextLine();
 
         try {
