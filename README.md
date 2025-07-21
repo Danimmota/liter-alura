@@ -8,6 +8,7 @@ Este é um projeto Java com interação via console e integração com banco de 
 - Java 17
 - Maven
 - Bibliotecas:
+  - Lombok 
   - Jackson (para conversão JSON)
   - HttpClient (para chamadas HTTP)
 - API Externa:
