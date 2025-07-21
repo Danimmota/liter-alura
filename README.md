@@ -21,13 +21,13 @@ Este é um projeto Java com interação via console e integração com banco de 
 - Integração com banco de dados
 
 - Buscar livro na API pelo título e salvar na base de dados
-- Buscar autor na base de dados pelo nome
-- Buscar livro e seu resumo, pelo autor
+- (extra) Buscar autor na base de dados pelo nome
+- (extra) Buscar livro e seu resumo, pelo autor
 - Listar livros cadastrados no banco de dados
 - Listar autores cadastrados no banco de dados
 - Listar autores vivos em algum ano
 - Listar os livros em algum idioma que estejam cadastrados no banco de dados
-- Listar Top 10 livros cadastrados no banco de dados
+- (extra) Listar Top 10 livros mais baixados, cadastrados no banco de dados
 
 ---
 ### 🧱 Estrutura de Pacotes
